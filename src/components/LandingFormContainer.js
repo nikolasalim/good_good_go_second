@@ -1,12 +1,15 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { autocomplete } from "air-port-codes-node";
+import { Redirect } from "react-router-dom";
+
 import LandingForm from "./LandingForm";
 import { gettingDeparture } from "../actions/searchActions";
 
 class LandingFormContainer extends Component {
   state = {
     search: "",
+    redirect: false,
   };
 
   onChange = (event) => {
@@ -36,7 +39,14 @@ class LandingFormContainer extends Component {
     };
 
     console.log("state now is", this.state);
-    this.setState({ search: "" });
+    this.setState({ search: "", redirect: true });
+  };
+
+  renderRedirect = () => {
+    if (this.state.redirect) {
+      console.log("REDIRECTING!");
+      return <Redirect to={`/destination`} />;
+    }
   };
 
   render() {
@@ -48,6 +58,7 @@ class LandingFormContainer extends Component {
           onSubmit={this.onSubmit}
           search={this.state.search}
         />
+        {this.renderRedirect()}
       </div>
     );
   }
