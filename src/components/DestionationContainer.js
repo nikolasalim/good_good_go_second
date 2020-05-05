@@ -1,37 +1,61 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import Destination from "./Destination";
-import destinationList from "../data/destionationList";
 
 class DestionationContainer extends Component {
   state = {
-    flightInfo: { ams: null, mad: null, bud: null },
+    flightsInfo: { ams: null, mad: null, bud: null },
+    weatherInfo: { ams: null, mad: null, bud: null },
     loading: true,
   };
 
   async componentDidUpdate() {
-    const responseAms = await fetch(
+    // Fetching flights info:
+    const responseFlightAms = await fetch(
       `https://api.skypicker.com/flights?fly_from=${this.props.search}&to=AMS&dateFrom=18/11/2020&dateTo=18/11/2020&partner=picky&v=3`
     );
-    const jsonAms = await responseAms.json();
+    const jsonFlightAms = await responseFlightAms.json();
 
-    const responseMad = await fetch(
+    const responseFlightMad = await fetch(
       `https://api.skypicker.com/flights?fly_from=${this.props.search}&to=MAD&dateFrom=18/11/2020&dateTo=18/11/2020&partner=picky&v=3`
     );
-    const jsonMad = await responseMad.json();
+    const jsonFlightMad = await responseFlightMad.json();
 
-    const responseBud = await fetch(
+    const responseFlightBud = await fetch(
       `https://api.skypicker.com/flights?fly_from=${this.props.search}&to=BUD&dateFrom=18/11/2020&dateTo=18/11/2020&partner=picky&v=3`
     );
-    const jsonBud = await responseBud.json();
+    const jsonFlightBud = await responseFlightBud.json();
+
+    // Fetching weather info:
+
+    const responseWeatherAms = await fetch(
+      `http://dataservice.accuweather.com/forecasts/v1/daily/5day/249758?apikey=${process.env.REACT_APP_ACCUWEATHER_KEY}&metric=true`
+    );
+    const jsonWeatherAms = await responseWeatherAms.json();
+
+    const responseWeatherMad = await fetch(
+      `http://dataservice.accuweather.com/forecasts/v1/daily/5day/308526?apikey=${process.env.REACT_APP_ACCUWEATHER_KEY}&metric=true`
+    );
+    const jsonWeatherMad = await responseWeatherMad.json();
+
+    const responseWeatherBud = await fetch(
+      `http://dataservice.accuweather.com/forecasts/v1/daily/5day/187423?apikey=${process.env.REACT_APP_ACCUWEATHER_KEY}&metric=true`
+    );
+    const jsonWeatherBud = await responseWeatherBud.json();
 
     await this.setState({
       ...this.state,
-      flightInfo: {
-        ...this.state.flightInfo,
-        ams: jsonAms,
-        mad: jsonMad,
-        bud: jsonBud,
+      flightsInfo: {
+        ...this.state.flightsInfo,
+        ams: jsonFlightAms.data[0].price,
+        mad: jsonFlightMad.data[0].price,
+        bud: jsonFlightBud.data[0].price,
+      },
+      weatherInfo: {
+        ...this.state.weatherInfo,
+        ams: jsonWeatherAms.DailyForecasts,
+        mad: jsonWeatherMad.DailyForecasts,
+        bud: jsonWeatherBud.DailyForecasts,
       },
       loading: false,
     });
@@ -46,7 +70,10 @@ class DestionationContainer extends Component {
     return (
       <div>
         {console.log("this.props.search is", this.props.search)}
-        <Destination destinationList={destinationList} />
+        <Destination
+          flightsInfo={this.state.flightsInfo}
+          weatherInfo={this.state.weatherInfo}
+        />
       </div>
     );
   }
