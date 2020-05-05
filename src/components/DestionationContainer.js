@@ -10,10 +10,6 @@ class DestionationContainer extends Component {
     loading: true,
   };
 
-  // dateCalc = () => {
-  //   const today = moment().format("L");
-  // };
-
   async componentDidUpdate() {
     const today = moment().format("DD/MM/YYYY");
     const fiveDaysAhead = moment().add(5, "days").format("DD/MM/YYYY");
@@ -67,28 +63,15 @@ class DestionationContainer extends Component {
       },
       loading: false,
     });
-
-    console.log("state is", this.state);
   }
+
+  // Calculating the average maximum temperature:
 
   weatherAverageCalc = (cityArr) => {
     const maxTotal = cityArr
       .map((daylyWeather) => daylyWeather.Temperature.Maximum.Value)
       .reduce((acc, curr) => acc + curr, 0);
-    console.log("total max is;", maxTotal);
     const maxAverage = maxTotal / cityArr.length;
-
-    //  const minTotal = cityArr
-    //   .map((daylyWeather) => daylyWeather.Temperature.Minimum.Value)
-    //   .reduce((acc, curr) => acc + curr, 0);
-    // console.log("total min is;", minTotal);
-    // const minAverage = minTotal / cityArr.length;
-
-    // const averageTemperature = {
-    //   min: Math.round(minAverage),
-    //   max: Math.round(maxAverage),
-    // };
-    // return averageTemperature;
 
     return Math.round(maxAverage);
   };

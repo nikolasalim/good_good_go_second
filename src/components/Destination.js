@@ -2,6 +2,7 @@ import React, { Component } from "react";
 
 export default class Destination extends Component {
   state = {
+    // Hardcoding the cities for now:
     cities: [
       {
         id: 1,
@@ -24,6 +25,8 @@ export default class Destination extends Component {
     ],
     sorting: 1,
   };
+
+  // Sorting results by either price or weather:
 
   sortingByPrice = () => {
     this.setState(
@@ -48,7 +51,6 @@ export default class Destination extends Component {
         {this.state.cities.map((city) => {
           return (
             <div key={city.id}>
-              {console.log("sorting is now", this.state.sorting)}
               <h3>{city.name}</h3>
               <p>Cheapest price in the next 5 days: {city.cheapestFlight}</p>
               <p>
