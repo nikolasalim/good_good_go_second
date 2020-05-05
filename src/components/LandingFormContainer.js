@@ -30,7 +30,6 @@ class LandingFormContainer extends Component {
     apca.request(this.state.search);
 
     apca.onSuccess = (data) => {
-      // this.setState({ originIataCode: data.airports[0].iata });
       this.props.gettingDeparture(data.airports[0].iata);
     };
 
@@ -38,13 +37,11 @@ class LandingFormContainer extends Component {
       console.log("onError", data.message);
     };
 
-    console.log("state now is", this.state);
     this.setState({ search: "", redirect: true });
   };
 
   renderRedirect = () => {
     if (this.state.redirect) {
-      console.log("REDIRECTING!");
       return <Redirect to={`/destination`} />;
     }
   };

@@ -78,17 +78,17 @@ class DestionationContainer extends Component {
     console.log("total max is;", maxTotal);
     const maxAverage = maxTotal / cityArr.length;
 
-    /*  const minTotal = cityArr
-      .map((daylyWeather) => daylyWeather.Temperature.Minimum.Value)
-      .reduce((acc, curr) => acc + curr, 0);
-    console.log("total min is;", minTotal);
-    const minAverage = minTotal / cityArr.length;
+    //  const minTotal = cityArr
+    //   .map((daylyWeather) => daylyWeather.Temperature.Minimum.Value)
+    //   .reduce((acc, curr) => acc + curr, 0);
+    // console.log("total min is;", minTotal);
+    // const minAverage = minTotal / cityArr.length;
 
-    const averageTemperature = {
-      min: Math.round(minAverage),
-      max: Math.round(maxAverage),
-    };
-    return averageTemperature; */
+    // const averageTemperature = {
+    //   min: Math.round(minAverage),
+    //   max: Math.round(maxAverage),
+    // };
+    // return averageTemperature;
 
     return Math.round(maxAverage);
   };

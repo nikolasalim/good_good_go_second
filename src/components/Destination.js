@@ -1,70 +1,64 @@
 import React, { Component } from "react";
 
 export default class Destination extends Component {
-  render() {
-    const { ams, mad, bud } = this.props.weatherInfo;
-
-    const cities = [
+  state = {
+    cities: [
       {
         id: 1,
         name: "Amsterdam",
         cheapestFlight: this.props.flightsInfo.ams,
-
-        averageMaxTemp: ams,
+        averageMaxTemp: this.props.weatherInfo.ams,
       },
       {
         id: 2,
         name: "Madrid",
         cheapestFlight: this.props.flightsInfo.mad,
-
-        averageMaxTemp: mad,
+        averageMaxTemp: this.props.weatherInfo.mad,
       },
       {
         id: 3,
         name: "Budapest",
         cheapestFlight: this.props.flightsInfo.bud,
-
-        averageMaxTemp: bud,
+        averageMaxTemp: this.props.weatherInfo.bud,
       },
-    ];
+    ],
+    sorting: 1,
+  };
 
-    return cities.map((city) => {
-      return (
-        <div key={city.id}>
-          <h3>{city.name}</h3>
-          <p>Cheapest price in the next 5 days: {city.cheapestFlight}</p>
-          <p>
-            Average maximum temperature for the next 5 days:{" "}
-            {city.averageMaxTemp}
-          </p>
+  sortingByPrice = () => {
+    this.setState(
+      this.state.cities.sort((a, b) => a.cheapestFlight - b.cheapestFlight)
+    );
+  };
+
+  sortingByWeather = () => {
+    this.setState(
+      this.state.cities.sort((a, b) => b.averageMaxTemp - a.averageMaxTemp)
+    );
+  };
+
+  render() {
+    return (
+      <div>
+        <div>
+          What are you considering the most?
+          <button onClick={this.sortingByPrice}>Price</button>
+          <button onClick={this.sortingByWeather}>Weather</button>
         </div>
-      );
-    });
+        {this.state.cities.map((city) => {
+          return (
+            <div key={city.id}>
+              {console.log("sorting is now", this.state.sorting)}
+              <h3>{city.name}</h3>
+              <p>Cheapest price in the next 5 days: {city.cheapestFlight}</p>
+              <p>
+                Average maximum temperature for the next 5 days:{" "}
+                {city.averageMaxTemp}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+    );
   }
 }
-
-/* <div>
-{console.log("this.props.weatherInfo is", this.props.weatherInfo)}
-<h3>Amsterdam</h3>
-<p>Cheapest price in the next 5 days: {this.props.flightsInfo.ams}</p>
-<p>
-  Average temperature for the next 5 days: min {ams.min} | max{" "}
-  {ams.max}
-</p>
-</div>
-<div>
-<h3>Madrid</h3>
-<p>Cheapest price in the next 5 days: {this.props.flightsInfo.mad}</p>
-<p>
-  Average temperature for the next 5 days: min {mad.min} | max{" "}
-  {mad.max}
-</p>
-</div>
-<div>
-<h3>Budapest</h3>
-<p>Cheapest price in the next 5 days: {this.props.flightsInfo.bud}</p>
-<p>
-  Average temperature for the next 5 days: min {bud.min} | max{" "}
-  {bud.max}
-</p>
-</div> */
