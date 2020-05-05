@@ -34,7 +34,7 @@ class DestionationContainer extends Component {
     );
     const jsonFlightBud = await responseFlightBud.json();
 
-    /* // Fetching weather info:
+    // Fetching weather info:
 
     const responseWeatherAms = await fetch(
       `http://dataservice.accuweather.com/forecasts/v1/daily/5day/249758?apikey=${process.env.REACT_APP_ACCUWEATHER_KEY}&metric=true`
@@ -49,7 +49,7 @@ class DestionationContainer extends Component {
     const responseWeatherBud = await fetch(
       `http://dataservice.accuweather.com/forecasts/v1/daily/5day/187423?apikey=${process.env.REACT_APP_ACCUWEATHER_KEY}&metric=true`
     );
-    const jsonWeatherBud = await responseWeatherBud.json(); */
+    const jsonWeatherBud = await responseWeatherBud.json();
 
     await this.setState({
       ...this.state,
@@ -59,12 +59,12 @@ class DestionationContainer extends Component {
         mad: jsonFlightMad.data[0].price,
         bud: jsonFlightBud.data[0].price,
       },
-      /* weatherInfo: {
+      weatherInfo: {
         ...this.state.weatherInfo,
         ams: jsonWeatherAms.DailyForecasts,
         mad: jsonWeatherMad.DailyForecasts,
         bud: jsonWeatherBud.DailyForecasts,
-      }, */
+      },
       loading: false,
     });
 
@@ -78,7 +78,7 @@ class DestionationContainer extends Component {
     console.log("total max is;", maxTotal);
     const maxAverage = maxTotal / cityArr.length;
 
-    const minTotal = cityArr
+    /*  const minTotal = cityArr
       .map((daylyWeather) => daylyWeather.Temperature.Minimum.Value)
       .reduce((acc, curr) => acc + curr, 0);
     console.log("total min is;", minTotal);
@@ -88,17 +88,19 @@ class DestionationContainer extends Component {
       min: Math.round(minAverage),
       max: Math.round(maxAverage),
     };
-    return averageTemperature;
+    return averageTemperature; */
+
+    return Math.round(maxAverage);
   };
 
-  /* agroupingAverages = () => {
+  agroupingAverages = () => {
     const weatherAverageAllCities = {
       ams: this.weatherAverageCalc(this.state.weatherInfo.ams),
       mad: this.weatherAverageCalc(this.state.weatherInfo.mad),
       bud: this.weatherAverageCalc(this.state.weatherInfo.bud),
     };
     return weatherAverageAllCities;
-  }; */
+  };
 
   render() {
     if (this.state.loading || this.props.search === {}) {
@@ -108,7 +110,7 @@ class DestionationContainer extends Component {
       <div>
         <Destination
           flightsInfo={this.state.flightsInfo}
-          /* weatherInfo={this.agroupingAverages()} */
+          weatherInfo={this.agroupingAverages()}
         />
       </div>
     );
