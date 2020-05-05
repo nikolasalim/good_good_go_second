@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import Destination from "./Destination";
+import moment from "moment";
 
 class DestionationContainer extends Component {
   state = {
@@ -9,24 +10,31 @@ class DestionationContainer extends Component {
     loading: true,
   };
 
+  // dateCalc = () => {
+  //   const today = moment().format("L");
+  // };
+
   async componentDidUpdate() {
+    const today = moment().format("DD/MM/YYYY");
+    const fiveDaysAhead = moment().add(5, "days").format("DD/MM/YYYY");
+
     // Fetching flights info:
     const responseFlightAms = await fetch(
-      `https://api.skypicker.com/flights?fly_from=${this.props.search}&to=AMS&dateFrom=18/11/2020&dateTo=18/11/2020&partner=picky&v=3`
+      `https://api.skypicker.com/flights?fly_from=${this.props.search}&to=AMS&dateFrom=${today}&dateTo=${fiveDaysAhead}&partner=picky&v=3`
     );
     const jsonFlightAms = await responseFlightAms.json();
 
     const responseFlightMad = await fetch(
-      `https://api.skypicker.com/flights?fly_from=${this.props.search}&to=MAD&dateFrom=18/11/2020&dateTo=18/11/2020&partner=picky&v=3`
+      `https://api.skypicker.com/flights?fly_from=${this.props.search}&to=MAD&dateFrom=${today}&dateTo=${fiveDaysAhead}&partner=picky&v=3`
     );
     const jsonFlightMad = await responseFlightMad.json();
 
     const responseFlightBud = await fetch(
-      `https://api.skypicker.com/flights?fly_from=${this.props.search}&to=BUD&dateFrom=18/11/2020&dateTo=18/11/2020&partner=picky&v=3`
+      `https://api.skypicker.com/flights?fly_from=${this.props.search}&to=BUD&dateFrom=${today}&dateTo=${fiveDaysAhead}&partner=picky&v=3`
     );
     const jsonFlightBud = await responseFlightBud.json();
 
-    // Fetching weather info:
+    /* // Fetching weather info:
 
     const responseWeatherAms = await fetch(
       `http://dataservice.accuweather.com/forecasts/v1/daily/5day/249758?apikey=${process.env.REACT_APP_ACCUWEATHER_KEY}&metric=true`
@@ -41,7 +49,7 @@ class DestionationContainer extends Component {
     const responseWeatherBud = await fetch(
       `http://dataservice.accuweather.com/forecasts/v1/daily/5day/187423?apikey=${process.env.REACT_APP_ACCUWEATHER_KEY}&metric=true`
     );
-    const jsonWeatherBud = await responseWeatherBud.json();
+    const jsonWeatherBud = await responseWeatherBud.json(); */
 
     await this.setState({
       ...this.state,
@@ -51,17 +59,46 @@ class DestionationContainer extends Component {
         mad: jsonFlightMad.data[0].price,
         bud: jsonFlightBud.data[0].price,
       },
-      weatherInfo: {
+      /* weatherInfo: {
         ...this.state.weatherInfo,
         ams: jsonWeatherAms.DailyForecasts,
         mad: jsonWeatherMad.DailyForecasts,
         bud: jsonWeatherBud.DailyForecasts,
-      },
+      }, */
       loading: false,
     });
 
     console.log("state is", this.state);
   }
+
+  weatherAverageCalc = (cityArr) => {
+    const maxTotal = cityArr
+      .map((daylyWeather) => daylyWeather.Temperature.Maximum.Value)
+      .reduce((acc, curr) => acc + curr, 0);
+    console.log("total max is;", maxTotal);
+    const maxAverage = maxTotal / cityArr.length;
+
+    const minTotal = cityArr
+      .map((daylyWeather) => daylyWeather.Temperature.Minimum.Value)
+      .reduce((acc, curr) => acc + curr, 0);
+    console.log("total min is;", minTotal);
+    const minAverage = minTotal / cityArr.length;
+
+    const averageTemperature = {
+      min: Math.round(minAverage),
+      max: Math.round(maxAverage),
+    };
+    return averageTemperature;
+  };
+
+  /* agroupingAverages = () => {
+    const weatherAverageAllCities = {
+      ams: this.weatherAverageCalc(this.state.weatherInfo.ams),
+      mad: this.weatherAverageCalc(this.state.weatherInfo.mad),
+      bud: this.weatherAverageCalc(this.state.weatherInfo.bud),
+    };
+    return weatherAverageAllCities;
+  }; */
 
   render() {
     if (this.state.loading || this.props.search === {}) {
@@ -69,10 +106,9 @@ class DestionationContainer extends Component {
     }
     return (
       <div>
-        {console.log("this.props.search is", this.props.search)}
         <Destination
           flightsInfo={this.state.flightsInfo}
-          weatherInfo={this.state.weatherInfo}
+          /* weatherInfo={this.agroupingAverages()} */
         />
       </div>
     );
