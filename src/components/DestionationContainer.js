@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 import Destination from "./Destination";
 import moment from "moment";
 
+console.log("process env is", process.env);
+
 class DestionationContainer extends Component {
   state = {
     flightsInfo: { ams: null, mad: null, bud: null },
