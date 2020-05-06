@@ -3,6 +3,9 @@ import { connect } from "react-redux";
 import Destination from "./Destination";
 import moment from "moment";
 
+import loading from "../assets/loading.gif";
+import classes from "./DestionationContainer.module.css";
+
 class DestionationContainer extends Component {
   state = {
     flightsInfo: { ams: null, mad: null, bud: null },
@@ -89,7 +92,11 @@ class DestionationContainer extends Component {
 
   render() {
     if (this.state.loading || this.props.search === {}) {
-      return <div>Loading...</div>;
+      return (
+        <div className={classes.body}>
+          <img src={loading} className={classes.spinner}></img>
+        </div>
+      );
     }
     return (
       <div>

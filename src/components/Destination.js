@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import Slider from "@material-ui/core/Slider";
 
+import classes from "./Destination.module.css";
+
 const marks = [
   {
     value: 1,
@@ -121,8 +123,9 @@ export default class Destination extends Component {
 
   render() {
     return (
-      <div>
+      <div className={classes.body}>
         <Slider
+          className={classes.slider}
           style={{ width: "100px" }}
           defaultValue={2}
           min={1}
@@ -131,24 +134,20 @@ export default class Destination extends Component {
           marks={marks}
           onChangeCommitted={this.handleChange}
         />
-
-        {/* <div>
-          What are you considering the most?
-          <button onClick={this.sortingByPrice}>Price</button>
-          <button onClick={this.sortingByBoth}>Both</button>
-          <button onClick={this.sortingByWeather}>Weather</button>
-        </div> */}
         {this.state.cities.map((city) => {
           return (
-            <div key={city.id}>
-              <h3>{city.name}</h3>
-              <p>
-                Cheapest price in the next 5 days: &euro;{city.cheapestFlight}
-                ,00
+            <div className={classes.card} key={city.id}>
+              <h3 className={classes.title}>{city.name}</h3>
+              <p className={classes.text}>
+                Cheapest price <i>(next 5 days)</i>:{" "}
+                <b>
+                  &euro;{city.cheapestFlight}
+                  ,00
+                </b>
               </p>
-              <p>
-                Average maximum temperature for the next 5 days:{" "}
-                {city.averageMaxTemp}&#8451;
+              <p className={classes.text}>
+                Average maximum temperature <i>(next 5 days)</i>:{" "}
+                <b>{city.averageMaxTemp}&#8451;</b>
               </p>
             </div>
           );
