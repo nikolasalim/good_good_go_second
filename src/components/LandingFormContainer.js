@@ -54,7 +54,6 @@ class LandingFormContainer extends Component {
   render() {
     return (
       <div>
-        Please, fill in the city of departure:
         <LandingForm
           onChange={this.onChange}
           onSubmit={this.onSubmit}

@@ -7,6 +7,8 @@ import HeaderContainer from "./components/HeaderContainer";
 import LandingPageContainer from "./components/LandingPageContainer";
 import DestinationContainer from "./components/DestionationContainer";
 
+import classes from "./App.module.css";
+
 export default class App extends Component {
   render() {
     return (
