@@ -40,12 +40,65 @@ export default class Destination extends Component {
     );
   };
 
+  sortingByBoth = () => {
+    this.setState(this.state.cities.sort((a, b) => b.points - a.points));
+  };
+
+  addingPoints = () => {
+    // Calculating weather points:
+    const temperatures = this.state.cities.map((city) => city.averageMaxTemp);
+    const smaller = temperatures.reduce((acc, curr) => Math.min(acc, curr));
+
+    const weatherPoints = this.state.cities.map((city) => {
+      return {
+        ...city,
+        points: city.averageMaxTemp / smaller,
+      };
+    });
+
+    // Calculating price points:
+    const prices = this.state.cities.map((city) => city.cheapestFlight);
+    const mostExpensive = prices.reduce((acc, curr) => Math.max(acc, curr));
+
+    const pricePoints = this.state.cities.map((city) => {
+      return {
+        ...city,
+        points: mostExpensive / city.cheapestFlight,
+      };
+    });
+
+    // Calculating sum of points:
+    const totalPoint = weatherPoints.map((city) => {
+      const arr = [];
+
+      pricePoints.map((c) => {
+        if (city.id === c.id) {
+          arr.push({ ...c, points: c.points + city.points });
+        }
+      });
+
+      return arr;
+    });
+    const totalPointsFlat = totalPoint.flat();
+    console.log("totalPointsFlat is:", totalPointsFlat);
+
+    this.setState((prevState) => ({
+      cities: totalPointsFlat,
+      ...prevState.sorting,
+    }));
+  };
+
+  componentWillMount() {
+    this.addingPoints();
+  }
+
   render() {
     return (
       <div>
         <div>
           What are you considering the most?
           <button onClick={this.sortingByPrice}>Price</button>
+          <button onClick={this.sortingByBoth}>Both</button>
           <button onClick={this.sortingByWeather}>Weather</button>
         </div>
         {this.state.cities.map((city) => {
