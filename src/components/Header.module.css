@@ -4,13 +4,13 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  padding: 25px;
 }
 
 .logo {
   font-weight: bold;
   font-size: 22px;
-  padding-bottom: 3px;
+  padding-bottom: 5px;
 }
 
 .tagline {

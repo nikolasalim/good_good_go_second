@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 import { Switch, Route } from "react-router-dom";
 
 import HeaderContainer from "./components/HeaderContainer";
-import LandingPageContainer from "./components/LandingPageContainer";
+import LandingFormContainer from "./components/LandingFormContainer";
 import DestinationContainer from "./components/DestionationContainer";
 
 import classes from "./App.module.css";
@@ -16,7 +16,7 @@ export default class App extends Component {
         <Route path="/" component={HeaderContainer} />
         <Switch>
           <Route path="/destination" component={DestinationContainer} />
-          <Route path="/" component={LandingPageContainer} />
+          <Route path="/" component={LandingFormContainer} />
         </Switch>
       </Provider>
     );

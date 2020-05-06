@@ -2,11 +2,14 @@ import React, { Component } from "react";
 import Slider from "@material-ui/core/Slider";
 
 import classes from "./Destination.module.css";
+import amsterdam from "../assets/amsterdam.png";
+import madrid from "../assets/madrid.png";
+import budapest from "../assets/budapest.png";
 
 const marks = [
   {
     value: 1,
-    label: "Price",
+    label: "Good price",
   },
   {
     value: 2,
@@ -14,7 +17,7 @@ const marks = [
   },
   {
     value: 3,
-    label: "Weather",
+    label: "Good weather",
   },
 ];
 
@@ -25,20 +28,26 @@ export default class Destination extends Component {
       {
         id: 1,
         name: "Amsterdam",
-        cheapestFlight: this.props.flightsInfo.ams,
+        cheapestFlight: this.props.flightsInfo.ams.price,
         averageMaxTemp: this.props.weatherInfo.ams,
+        image: amsterdam,
+        url: this.props.flightsInfo.ams.deep_link,
       },
       {
         id: 2,
         name: "Madrid",
-        cheapestFlight: this.props.flightsInfo.mad,
+        cheapestFlight: this.props.flightsInfo.mad.price,
         averageMaxTemp: this.props.weatherInfo.mad,
+        image: madrid,
+        url: this.props.flightsInfo.mad.deep_link,
       },
       {
         id: 3,
         name: "Budapest",
-        cheapestFlight: this.props.flightsInfo.bud,
+        cheapestFlight: this.props.flightsInfo.bud.price,
         averageMaxTemp: this.props.weatherInfo.bud,
+        image: budapest,
+        url: this.props.flightsInfo.bud.deep_link,
       },
     ],
     // sorting: 2,
@@ -124,34 +133,55 @@ export default class Destination extends Component {
   render() {
     return (
       <div className={classes.body}>
-        <Slider
-          className={classes.slider}
-          style={{ width: "100px" }}
-          defaultValue={2}
-          min={1}
-          max={3}
-          step={1}
-          marks={marks}
-          onChangeCommitted={this.handleChange}
-        />
+        <div className={classes.sliderBox}>
+          <p className={classes.text}>What do you prefer?</p>
+          <Slider
+            className={classes.slider}
+            defaultValue={2}
+            min={1}
+            max={3}
+            step={1}
+            marks={marks}
+            onChangeCommitted={this.handleChange}
+          />
+        </div>
+
         {this.state.cities.map((city) => {
           return (
             <div className={classes.card} key={city.id}>
-              <h3 className={classes.title}>{city.name}</h3>
-              <p className={classes.text}>
-                Cheapest price <i>(next 5 days)</i>:{" "}
-                <b>
-                  &euro;{city.cheapestFlight}
-                  ,00
-                </b>
-              </p>
-              <p className={classes.text}>
-                Average maximum temperature <i>(next 5 days)</i>:{" "}
-                <b>{city.averageMaxTemp}&#8451;</b>
-              </p>
+              <div className={classes.boxLeft}>
+                <img src={city.image} className={classes.image}></img>
+              </div>
+              <div className={classes.boxRight}>
+                <div className={classes.info}>
+                  <h3 className={classes.title}>{city.name}</h3>
+                  <p className={classes.text}>
+                    Cheapest price <i>(next 5 days)</i>:{" "}
+                    <b>
+                      &euro;{city.cheapestFlight}
+                      ,00
+                    </b>
+                  </p>
+                  <p className={classes.text}>
+                    Average maximum temperature <i>(next 5 days)</i>:{" "}
+                    <b>{city.averageMaxTemp}&#8451;</b>
+                  </p>
+                </div>
+                <div className={classes.buttonBox}>
+                  <button
+                    className={classes.button}
+                    onClick={() => {
+                      window.open(city.url, "_blank");
+                    }}
+                  >
+                    It's go time!
+                  </button>
+                </div>
+              </div>
             </div>
           );
         })}
+        {console.log("this.props.flightsInfo is", this.props.flightsInfo)}
       </div>
     );
   }

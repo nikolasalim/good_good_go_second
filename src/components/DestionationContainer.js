@@ -56,9 +56,9 @@ class DestionationContainer extends Component {
         ...this.state,
         flightsInfo: {
           ...this.state.flightsInfo,
-          ams: jsonFlightAms.data[0].price,
-          mad: jsonFlightMad.data[0].price,
-          bud: jsonFlightBud.data[0].price,
+          ams: jsonFlightAms.data[0],
+          mad: jsonFlightMad.data[0],
+          bud: jsonFlightBud.data[0],
         },
         weatherInfo: {
           ...this.state.weatherInfo,
