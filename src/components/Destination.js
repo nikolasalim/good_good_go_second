@@ -52,10 +52,13 @@ export default class Destination extends Component {
           return (
             <div key={city.id}>
               <h3>{city.name}</h3>
-              <p>Cheapest price in the next 5 days: {city.cheapestFlight}</p>
+              <p>
+                Cheapest price in the next 5 days: &euro;{city.cheapestFlight}
+                ,00
+              </p>
               <p>
                 Average maximum temperature for the next 5 days:{" "}
-                {city.averageMaxTemp}
+                {city.averageMaxTemp}&#8451;
               </p>
             </div>
           );

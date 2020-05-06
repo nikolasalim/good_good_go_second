@@ -3,8 +3,6 @@ import { connect } from "react-redux";
 import Destination from "./Destination";
 import moment from "moment";
 
-console.log("process env is", process.env);
-
 class DestionationContainer extends Component {
   state = {
     flightsInfo: { ams: null, mad: null, bud: null },
@@ -12,61 +10,63 @@ class DestionationContainer extends Component {
     loading: true,
   };
 
-  async componentDidUpdate() {
+  async componentDidUpdate(prevProps) {
     const today = moment().format("DD/MM/YYYY");
     const fiveDaysAhead = moment().add(5, "days").format("DD/MM/YYYY");
+    console.log("this.props.search is", this.props.search);
 
-    // Fetching flights info:
-    const responseFlightAms = await fetch(
-      `https://api.skypicker.com/flights?fly_from=${this.props.search}&to=AMS&dateFrom=${today}&dateTo=${fiveDaysAhead}&partner=picky&v=3`
-    );
-    const jsonFlightAms = await responseFlightAms.json();
+    if (this.props.search !== prevProps.search) {
+      // Fetching flights info:
+      const responseFlightAms = await fetch(
+        `https://api.skypicker.com/flights?fly_from=${this.props.search}&to=AMS&dateFrom=${today}&dateTo=${fiveDaysAhead}&partner=picky&v=3`
+      );
+      const jsonFlightAms = await responseFlightAms.json();
 
-    const responseFlightMad = await fetch(
-      `https://api.skypicker.com/flights?fly_from=${this.props.search}&to=MAD&dateFrom=${today}&dateTo=${fiveDaysAhead}&partner=picky&v=3`
-    );
-    const jsonFlightMad = await responseFlightMad.json();
+      const responseFlightMad = await fetch(
+        `https://api.skypicker.com/flights?fly_from=${this.props.search}&to=MAD&dateFrom=${today}&dateTo=${fiveDaysAhead}&partner=picky&v=3`
+      );
+      const jsonFlightMad = await responseFlightMad.json();
 
-    const responseFlightBud = await fetch(
-      `https://api.skypicker.com/flights?fly_from=${this.props.search}&to=BUD&dateFrom=${today}&dateTo=${fiveDaysAhead}&partner=picky&v=3`
-    );
-    const jsonFlightBud = await responseFlightBud.json();
+      const responseFlightBud = await fetch(
+        `https://api.skypicker.com/flights?fly_from=${this.props.search}&to=BUD&dateFrom=${today}&dateTo=${fiveDaysAhead}&partner=picky&v=3`
+      );
+      const jsonFlightBud = await responseFlightBud.json();
 
-    // Fetching weather info:
+      // Fetching weather info:
 
-    const responseWeatherAms = await fetch(
-      `http://dataservice.accuweather.com/forecasts/v1/daily/5day/249758?apikey=${process.env.REACT_APP_ACCUWEATHER_KEY}&metric=true`
-    );
-    const jsonWeatherAms = await responseWeatherAms.json();
+      const responseWeatherAms = await fetch(
+        `http://dataservice.accuweather.com/forecasts/v1/daily/5day/249758?apikey=${process.env.REACT_APP_ACCUWEATHER_KEY}&metric=true`
+      );
+      const jsonWeatherAms = await responseWeatherAms.json();
 
-    const responseWeatherMad = await fetch(
-      `http://dataservice.accuweather.com/forecasts/v1/daily/5day/308526?apikey=${process.env.REACT_APP_ACCUWEATHER_KEY}&metric=true`
-    );
-    const jsonWeatherMad = await responseWeatherMad.json();
+      const responseWeatherMad = await fetch(
+        `http://dataservice.accuweather.com/forecasts/v1/daily/5day/308526?apikey=${process.env.REACT_APP_ACCUWEATHER_KEY}&metric=true`
+      );
+      const jsonWeatherMad = await responseWeatherMad.json();
 
-    const responseWeatherBud = await fetch(
-      `http://dataservice.accuweather.com/forecasts/v1/daily/5day/187423?apikey=${process.env.REACT_APP_ACCUWEATHER_KEY}&metric=true`
-    );
-    const jsonWeatherBud = await responseWeatherBud.json();
+      const responseWeatherBud = await fetch(
+        `http://dataservice.accuweather.com/forecasts/v1/daily/5day/187423?apikey=${process.env.REACT_APP_ACCUWEATHER_KEY}&metric=true`
+      );
+      const jsonWeatherBud = await responseWeatherBud.json();
 
-    await this.setState({
-      ...this.state,
-      flightsInfo: {
-        ...this.state.flightsInfo,
-        ams: jsonFlightAms.data[0].price,
-        mad: jsonFlightMad.data[0].price,
-        bud: jsonFlightBud.data[0].price,
-      },
-      weatherInfo: {
-        ...this.state.weatherInfo,
-        ams: jsonWeatherAms.DailyForecasts,
-        mad: jsonWeatherMad.DailyForecasts,
-        bud: jsonWeatherBud.DailyForecasts,
-      },
-      loading: false,
-    });
+      await this.setState({
+        ...this.state,
+        flightsInfo: {
+          ...this.state.flightsInfo,
+          ams: jsonFlightAms.data[0].price,
+          mad: jsonFlightMad.data[0].price,
+          bud: jsonFlightBud.data[0].price,
+        },
+        weatherInfo: {
+          ...this.state.weatherInfo,
+          ams: jsonWeatherAms.DailyForecasts,
+          mad: jsonWeatherMad.DailyForecasts,
+          bud: jsonWeatherBud.DailyForecasts,
+        },
+        loading: false,
+      });
+    }
   }
-
   // Calculating the average maximum temperature:
 
   weatherAverageCalc = (cityArr) => {
