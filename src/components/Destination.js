@@ -1,4 +1,20 @@
 import React, { Component } from "react";
+import Slider from "@material-ui/core/Slider";
+
+const marks = [
+  {
+    value: 1,
+    label: "Price",
+  },
+  {
+    value: 2,
+    label: "Both",
+  },
+  {
+    value: 3,
+    label: "Weather",
+  },
+];
 
 export default class Destination extends Component {
   state = {
@@ -23,7 +39,7 @@ export default class Destination extends Component {
         averageMaxTemp: this.props.weatherInfo.bud,
       },
     ],
-    sorting: 1,
+    // sorting: 2,
   };
 
   // Sorting results by either price or weather:
@@ -88,19 +104,40 @@ export default class Destination extends Component {
     }));
   };
 
-  componentWillMount() {
-    this.addingPoints();
+  handleChange = (event, value) => {
+    if (value === 1) {
+      this.sortingByPrice();
+    } else if (value === 2) {
+      this.sortingByBoth();
+    } else {
+      this.sortingByWeather();
+    }
+  };
+
+  async componentWillMount() {
+    await this.addingPoints();
+    this.sortingByBoth();
   }
 
   render() {
     return (
       <div>
-        <div>
+        <Slider
+          style={{ width: "100px" }}
+          defaultValue={2}
+          min={1}
+          max={3}
+          step={1}
+          marks={marks}
+          onChangeCommitted={this.handleChange}
+        />
+
+        {/* <div>
           What are you considering the most?
           <button onClick={this.sortingByPrice}>Price</button>
           <button onClick={this.sortingByBoth}>Both</button>
           <button onClick={this.sortingByWeather}>Weather</button>
-        </div>
+        </div> */}
         {this.state.cities.map((city) => {
           return (
             <div key={city.id}>
@@ -120,3 +157,13 @@ export default class Destination extends Component {
     );
   }
 }
+
+/* {
+            if (this.state.sorting === 1) {
+              this.sortingByPrice();
+            } else if (this.state.sorting === 2) {
+              this.sortingByBoth();
+            } else {
+              this.sortingByWeather();
+            }
+          } */
