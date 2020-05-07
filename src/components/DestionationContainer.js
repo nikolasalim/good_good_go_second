@@ -20,52 +20,48 @@ class DestionationContainer extends Component {
 
     if (this.props.search !== prevProps.search) {
       // Fetching flights info:
-      const responseFlightAms = await fetch(
-        `https://api.skypicker.com/flights?fly_from=${this.props.search}&to=AMS&dateFrom=${today}&dateTo=${fiveDaysAhead}&partner=picky&v=3`
-      );
-      const jsonFlightAms = await responseFlightAms.json();
 
-      const responseFlightMad = await fetch(
-        `https://api.skypicker.com/flights?fly_from=${this.props.search}&to=MAD&dateFrom=${today}&dateTo=${fiveDaysAhead}&partner=picky&v=3`
-      );
-      const jsonFlightMad = await responseFlightMad.json();
+      const cityCodes = ["AMS", "MAD", "BUD"];
 
-      const responseFlightBud = await fetch(
-        `https://api.skypicker.com/flights?fly_from=${this.props.search}&to=BUD&dateFrom=${today}&dateTo=${fiveDaysAhead}&partner=picky&v=3`
+      const cityFlightRequests = cityCodes.map(async (code) => {
+        const responseFlight = await fetch(
+          `https://api.skypicker.com/flights?fly_from=${this.props.search}&to=${code}&dateFrom=${today}&dateTo=${fiveDaysAhead}&partner=picky&v=3`
+        );
+        return await responseFlight.json();
+      });
+
+      const cityFlightsArray = await Promise.all(cityFlightRequests);
+
+      const cityFlights = cityCodes.reduce(
+        (acc, code, i) => ({ ...acc, [code]: cityFlightsArray[i].data[0] }),
+        {}
       );
-      const jsonFlightBud = await responseFlightBud.json();
 
       // Fetching weather info:
 
-      const responseWeatherAms = await fetch(
-        `https://dataservice.accuweather.com/forecasts/v1/daily/5day/249758?apikey=${process.env.REACT_APP_ACCUWEATHER_KEY}&metric=true`
-      );
-      const jsonWeatherAms = await responseWeatherAms.json();
+      const cityIds = ["249758", "308526", "187423"];
 
-      const responseWeatherMad = await fetch(
-        `https://dataservice.accuweather.com/forecasts/v1/daily/5day/308526?apikey=${process.env.REACT_APP_ACCUWEATHER_KEY}&metric=true`
-      );
-      const jsonWeatherMad = await responseWeatherMad.json();
+      const cityWeatherRequests = cityIds.map(async (id) => {
+        const responseWeather = await fetch(
+          `https://dataservice.accuweather.com/forecasts/v1/daily/5day/${id}?apikey=${process.env.REACT_APP_ACCUWEATHER_KEY}&metric=true`
+        );
+        return await responseWeather.json();
+      });
 
-      const responseWeatherBud = await fetch(
-        `https://dataservice.accuweather.com/forecasts/v1/daily/5day/187423?apikey=${process.env.REACT_APP_ACCUWEATHER_KEY}&metric=true`
+      const cityWeathersArray = await Promise.all(cityWeatherRequests);
+
+      const cityWeathers = cityCodes.reduce(
+        (acc, code, i) => ({
+          ...acc,
+          [code]: cityWeathersArray[i].DailyForecasts,
+        }),
+        {}
       );
-      const jsonWeatherBud = await responseWeatherBud.json();
 
       await this.setState({
         ...this.state,
-        flightsInfo: {
-          ...this.state.flightsInfo,
-          ams: jsonFlightAms.data[0],
-          mad: jsonFlightMad.data[0],
-          bud: jsonFlightBud.data[0],
-        },
-        weatherInfo: {
-          ...this.state.weatherInfo,
-          ams: jsonWeatherAms.DailyForecasts,
-          mad: jsonWeatherMad.DailyForecasts,
-          bud: jsonWeatherBud.DailyForecasts,
-        },
+        flightsInfo: cityFlights,
+        weatherInfo: cityWeathers,
         loading: false,
       });
     }
@@ -83,14 +79,15 @@ class DestionationContainer extends Component {
 
   agroupingAverages = () => {
     const weatherAverageAllCities = {
-      ams: this.weatherAverageCalc(this.state.weatherInfo.ams),
-      mad: this.weatherAverageCalc(this.state.weatherInfo.mad),
-      bud: this.weatherAverageCalc(this.state.weatherInfo.bud),
+      AMS: this.weatherAverageCalc(this.state.weatherInfo.AMS),
+      MAD: this.weatherAverageCalc(this.state.weatherInfo.MAD),
+      BUD: this.weatherAverageCalc(this.state.weatherInfo.BUD),
     };
     return weatherAverageAllCities;
   };
 
   render() {
+    // return "test";
     if (this.state.loading || this.props.search === {}) {
       return (
         <div className={classes.body}>
