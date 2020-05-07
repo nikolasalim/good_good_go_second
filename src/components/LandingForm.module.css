@@ -1,0 +1,21 @@
+.body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 85vh;
+  background-color: whitesmoke;
+}
+.text {
+  font-size: 13px;
+  padding: 25px 0px 15px 0px;
+}
+
+::placeholder {
+  font-style: italic;
+}
+
+.input {
+  padding: 10px 8px;
+  border: 1px solid #23cf51;
+  border-radius: 7px;
+}

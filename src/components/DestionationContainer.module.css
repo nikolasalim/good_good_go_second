@@ -1,0 +1,13 @@
+.body {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  background-color: whitesmoke;
+  height: 85vh;
+}
+
+.spinner {
+  padding-top: 25px;
+  width: 70px;
+  height: auto;
+}
