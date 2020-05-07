@@ -12,11 +12,11 @@ const sliderMarks = [
     label: "Good price",
   },
   {
-    value: 2,
+    value: 3,
     label: "Both",
   },
   {
-    value: 3,
+    value: 5,
     label: "Good weather",
   },
 ];
@@ -70,48 +70,47 @@ export default class Destination extends Component {
     this.setState(this.state.cities.sort((a, b) => b.points - a.points));
   };
 
-  addingPoints = () => {
-    // Calculating weather points:
+  addingPoints = (preference = 3) => {
+    const scoringPreference = {
+      2: [0.75, 0.25],
+      3: [0.5, 0.5],
+      4: [0.25, 0.75],
+    };
     const temperatures = this.state.cities.map((city) => city.averageMaxTemp);
-    const smaller = temperatures.reduce((acc, curr) => Math.min(acc, curr));
-
-    const weatherPoints = this.state.cities.map((city) => {
-      return {
-        ...city,
-        points: city.averageMaxTemp / smaller,
-      };
-    });
-
-    // Calculating price points:
+    const averageTemp = temperatures.reduce(
+      (acc, curr) => acc + curr / temperatures.length,
+      0
+    );
     const prices = this.state.cities.map((city) => city.cheapestFlight);
-    const mostExpensive = prices.reduce((acc, curr) => Math.max(acc, curr));
+    const averagePrice = prices.reduce(
+      (acc, curr) => acc + curr / prices.length,
+      0
+    );
 
-    const pricePoints = this.state.cities.map((city) => {
-      return {
-        ...city,
-        points: mostExpensive / city.cheapestFlight,
-      };
-    });
+    // The higher the temperature, the better:
+    const tempDiffToAverage = temperatures.map(
+      (t) => (t - averageTemp) / averageTemp
+    );
 
-    // Calculating sum of points:
-    const totalPoint = weatherPoints.map((city) => {
-      const arr = [];
-
-      pricePoints.map((c) => {
-        if (city.id === c.id) {
-          arr.push({ ...c, points: c.points + city.points });
-        }
-      });
-
-      return arr;
-    });
-    const totalPointsFlat = totalPoint.flat();
-    console.log("totalPointsFlat is:", totalPointsFlat);
-
-    this.setState((prevState) => ({
-      cities: totalPointsFlat,
-      ...prevState.sorting,
+    // The lower the price, the better:
+    const pricesDiffToAverage = prices.map(
+      (p) => (averagePrice - p) / averagePrice
+    );
+    const calculatePoints = (i) =>
+      scoringPreference[preference][1] * tempDiffToAverage[i] +
+      scoringPreference[preference][0] * pricesDiffToAverage[i];
+    const citiesWithPoints = this.state.cities.map((c, i) => ({
+      ...c,
+      points: calculatePoints(i) + 4,
     }));
+
+    const sortedCities = [...citiesWithPoints].sort(
+      (a, b) => b.points - a.points
+    );
+
+    this.setState({
+      cities: sortedCities,
+    });
   };
 
   // Change handler for the slider:
@@ -138,11 +137,11 @@ export default class Destination extends Component {
       <div className={classes.body}>
         <div className={classes.sliderBox}>
           <p className={classes.text}>What do you prefer?</p>
+
           <Slider
-            className={classes.slider}
-            defaultValue={2}
+            defaultValue={3}
             min={1}
-            max={3}
+            max={5}
             step={1}
             marks={sliderMarks}
             onChangeCommitted={this.handleChange}
@@ -184,7 +183,6 @@ export default class Destination extends Component {
             </div>
           );
         })}
-        {console.log("this.props.flightsInfo is", this.props.flightsInfo)}
       </div>
     );
   }

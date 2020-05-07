@@ -16,7 +16,7 @@ export default class LandingForm extends Component {
             value={this.props.search}
             name="search"
             onChange={this.props.onChange}
-            placeholder="Ex: London"
+            placeholder="Ex: Tokyo"
           ></input>
         </form>
       </div>
