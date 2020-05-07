@@ -6,7 +6,7 @@ import amsterdam from "../assets/amsterdam.png";
 import madrid from "../assets/madrid.png";
 import budapest from "../assets/budapest.png";
 
-const marks = [
+const sliderMarks = [
   {
     value: 1,
     label: "Good price",
@@ -50,7 +50,6 @@ export default class Destination extends Component {
         url: this.props.flightsInfo.bud.deep_link,
       },
     ],
-    // sorting: 2,
   };
 
   // Sorting results by either price or weather:
@@ -115,6 +114,8 @@ export default class Destination extends Component {
     }));
   };
 
+  // Change handler for the slider:
+
   handleChange = (event, value) => {
     if (value === 1) {
       this.sortingByPrice();
@@ -124,6 +125,8 @@ export default class Destination extends Component {
       this.sortingByWeather();
     }
   };
+
+  // Marking sure we've got the points and setting "Both" as a starting point:
 
   async componentWillMount() {
     await this.addingPoints();
@@ -141,7 +144,7 @@ export default class Destination extends Component {
             min={1}
             max={3}
             step={1}
-            marks={marks}
+            marks={sliderMarks}
             onChangeCommitted={this.handleChange}
           />
         </div>
@@ -186,13 +189,3 @@ export default class Destination extends Component {
     );
   }
 }
-
-/* {
-            if (this.state.sorting === 1) {
-              this.sortingByPrice();
-            } else if (this.state.sorting === 2) {
-              this.sortingByBoth();
-            } else {
-              this.sortingByWeather();
-            }
-          } */
