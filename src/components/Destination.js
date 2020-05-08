@@ -158,7 +158,7 @@ export default class Destination extends Component {
                 <div className={classes.info}>
                   <h3 className={classes.title}>{city.name}</h3>
                   <p className={classes.text}>
-                    Cheapest price <i>(next 5 days)</i>:{" "}
+                    Cheapest flight <i>(next 5 days)</i>:{" "}
                     <b>
                       &euro;{city.cheapestFlight}
                       ,00
