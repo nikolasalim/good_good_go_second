@@ -16,7 +16,6 @@ class DestionationContainer extends Component {
   async componentDidUpdate(prevProps) {
     const today = moment().format("DD/MM/YYYY");
     const fiveDaysAhead = moment().add(5, "days").format("DD/MM/YYYY");
-    // console.log("this.props.search is", this.props.search);
 
     if (this.props.search !== prevProps.search) {
       // Fetching flights info:
@@ -87,7 +86,6 @@ class DestionationContainer extends Component {
   };
 
   render() {
-    // return "test";
     if (this.state.loading || this.props.search === {}) {
       return (
         <div className={classes.body}>

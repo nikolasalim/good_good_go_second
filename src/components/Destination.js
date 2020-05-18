@@ -72,9 +72,9 @@ export default class Destination extends Component {
 
   addingPoints = (preference = 3) => {
     const scoringPreference = {
-      2: [0.75, 0.25],
+      2: [0.25, 0.75],
       3: [0.5, 0.5],
-      4: [0.25, 0.75],
+      4: [0.75, 0.25],
     };
     const temperatures = this.state.cities.map((city) => city.averageMaxTemp);
     const averageTemp = temperatures.reduce(
@@ -96,9 +96,14 @@ export default class Destination extends Component {
     const pricesDiffToAverage = prices.map(
       (p) => (averagePrice - p) / averagePrice
     );
-    const calculatePoints = (i) =>
-      scoringPreference[preference][1] * tempDiffToAverage[i] +
-      scoringPreference[preference][0] * pricesDiffToAverage[i];
+
+    const calculatePoints = (i) => {
+      return (
+        scoringPreference[preference][0] * tempDiffToAverage[i] +
+        scoringPreference[preference][1] * pricesDiffToAverage[i]
+      );
+    };
+
     const citiesWithPoints = this.state.cities.map((c, i) => ({
       ...c,
       points: calculatePoints(i) + 4,
@@ -118,18 +123,17 @@ export default class Destination extends Component {
   handleChange = (event, value) => {
     if (value === 1) {
       this.sortingByPrice();
-    } else if (value === 2) {
-      this.sortingByBoth();
-    } else {
+    } else if (value === 5) {
       this.sortingByWeather();
+    } else {
+      this.addingPoints(value);
     }
   };
 
   // Marking sure we've got the points and setting "Both" as a starting point:
 
-  async componentWillMount() {
-    await this.addingPoints();
-    this.sortingByBoth();
+  componentWillMount() {
+    this.addingPoints();
   }
 
   render() {
